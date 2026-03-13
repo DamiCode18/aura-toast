@@ -19,6 +19,7 @@ header h1 {
   margin-bottom: 0.5rem;
   background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -71,4 +72,125 @@ header h1 {
 .feature-card p {
   color: #94a3b8;
   line-height: 1.6;
+}
+
+/* Playground Styles */
+.playground-section {
+  margin-top: 5rem;
+  padding: 3rem;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  text-align: left;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.playground-section h2 {
+  margin-top: 0;
+  font-size: 2rem;
+  background: linear-gradient(to right, #6366f1, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.editor-container {
+  margin: 2rem 0;
+  position: relative;
+  background: #0b0f1a;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.editor-header {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editor-title {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.code-textarea {
+  width: 100%;
+  height: 200px;
+  background: transparent;
+  color: #e2e8f0;
+  border: none;
+  padding: 1.5rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+}
+
+.playground-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  gap: 1rem;
+}
+
+.playground-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.run-btn {
+  background: #6366f1;
+  color: white;
+  border: none;
+}
+
+.run-btn:hover {
+  background: #4f46e5;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+}
+
+.reset-btn {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.reset-btn:hover {
+  background: rgba(148, 163, 184, 0.1);
+  color: white;
+}
+
+.presets {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.preset-chip {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.preset-chip:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #e2e8f0;
 }

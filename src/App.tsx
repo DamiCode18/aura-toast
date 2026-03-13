@@ -1,44 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AuraProvider, auraToast } from './index';
 import './styles/demo.css';
 
+const PRESETS = {
+  success: `auraToast.success('Changes saved successfully!', {
+  action: {
+    label: 'Undo',
+    onClick: () => console.log('Undo clicked'),
+  }
+});`,
+  error: `auraToast.error('An unexpected error occurred while processing your request.');`,
+  custom: `auraToast.info('This is a completely custom styled toast!', {
+  duration: 0,
+  style: {
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    '--type-color': '#fff',
+    '--type-glow': 'rgba(255, 255, 255, 0.5)',
+  }
+});`,
+};
+
 const App: React.FC = () => {
-  const triggerSuccess = () => {
-    auraToast.success('Project "QuantumLeap" changes were saved successfully!', {
-      action: {
-        label: 'View Project',
-        onClick: () => console.log('Action clicked'),
-      }
-    });
+  const [code, setCode] = useState(PRESETS.success);
+
+  const runCode = () => {
+    try {
+      // Create a safe-ish execution environment
+      const execute = new Function('auraToast', code);
+      execute(auraToast);
+    } catch (err) {
+      auraToast.error(`Execution Error: ${err instanceof Error ? err.message : String(err)}`);
+    }
   };
 
-  const triggerError = () => {
-    auraToast.error('An unexpected error occurred while processing your request.');
-  };
-
-  const triggerInfo = () => {
-    auraToast.info('A new version of the application is available.', {
-      duration: 10000,
-    });
-  };
-
-  const triggerWarning = () => {
-    auraToast.warning('Your subscription is expiring in 3 days.', {
-      duration: 3000,
-    });
-  };
-
-  const triggerCustom = () => {
-    auraToast.info('This is a completely custom styled toast!', {
-      duration: 0, // Sticky
-      style: {
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
-        '--type-color': '#fff',
-        '--type-glow': 'rgba(255, 255, 255, 0.5)',
-      } as any,
-    });
-  };
+  const triggerSuccess = () => auraToast.success('Project "QuantumLeap" changes were saved successfully!');
+  const triggerError = () => auraToast.error('An unexpected error occurred.');
+  const triggerInfo = () => auraToast.info('A new version is available.');
+  const triggerWarning = () => auraToast.warning('Your subscription is expiring soon.');
 
   return (
     <AuraProvider>
@@ -53,7 +52,33 @@ const App: React.FC = () => {
           <button onClick={triggerError} className="btn error">Show Error</button>
           <button onClick={triggerInfo} className="btn info">Show Info</button>
           <button onClick={triggerWarning} className="btn warning">Show Warning</button>
-          <button onClick={triggerCustom} className="btn custom" style={{background: '#764ba2', color: 'white'}}>Show Custom & Sticky</button>
+        </section>
+
+        <section className="playground-section">
+          <h2>Live Playground</h2>
+          <p>Test the code directly here. Feel free to modify the snippets below!</p>
+          
+          <div className="presets">
+            <button className="preset-chip" onClick={() => setCode(PRESETS.success)}>Success Preset</button>
+            <button className="preset-chip" onClick={() => setCode(PRESETS.error)}>Error Preset</button>
+            <button className="preset-chip" onClick={() => setCode(PRESETS.custom)}>Custom Styling</button>
+          </div>
+
+          <div className="editor-container">
+            <div className="editor-header">
+              <span className="editor-title">Interactive Editor</span>
+            </div>
+            <textarea 
+              className="code-textarea" 
+              value={code} 
+              onChange={(e) => setCode(e.target.value)}
+              spellCheck={false}
+            />
+            <div className="playground-actions">
+              <button className="playground-btn reset-btn" onClick={() => setCode(PRESETS.success)}>Reset</button>
+              <button className="playground-btn run-btn" onClick={runCode}>Run Snippet</button>
+            </div>
+          </div>
         </section>
 
         <section className="features">
