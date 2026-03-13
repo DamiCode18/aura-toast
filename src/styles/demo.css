@@ -206,20 +206,46 @@ header h1 {
 }
 
 .preset-chip {
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
-  font-size: 0.85rem;
+  background: rgba(148, 163, 184, 0.08);
+  border: 1.5px solid rgba(148, 163, 184, 0.2);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .preset-chip:hover {
   background: rgba(99, 102, 241, 0.1);
-  border-color: rgba(99, 102, 241, 0.3);
-  color: #e2e8f0;
+  border-color: rgba(99, 102, 241, 0.4);
+  color: var(--text-primary);
+}
+
+.preset-chip.active {
+  background: var(--header-gradient);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  transform: translateY(-1px);
+}
+
+.light-mode .preset-chip {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+
+.light-mode .preset-chip:hover {
+  background: #e0e7ff;
+  border-color: #6366f1;
+  color: #4f46e5;
+}
+
+.light-mode .preset-chip.active {
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 /* Toggle Switch Styles */

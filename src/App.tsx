@@ -30,8 +30,14 @@ const PRESETS = {
 
 const App: React.FC = () => {
   const [code, setCode] = useState(PRESETS.success);
+  const [activePreset, setActivePreset] = useState<keyof typeof PRESETS>('success');
   const [isGlassy, setIsGlassy] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const handleSetPreset = (key: keyof typeof PRESETS) => {
+    setCode(PRESETS[key]);
+    setActivePreset(key);
+  };
 
   // Sync code with glassy toggle
   const handleToggleGlassy = (enabled: boolean) => {
@@ -109,12 +115,27 @@ const App: React.FC = () => {
           <h2>Live Playground</h2>
           <p>Test the code directly here. Feel free to modify the snippets below!</p>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap' }}>
-            <div className="presets">
-              <button className="preset-chip" onClick={() => setCode(PRESETS.success)}>Success Preset</button>
-              <button className="preset-chip" onClick={() => setCode(PRESETS.error)}>Error Preset</button>
-              <button className="preset-chip" onClick={() => setCode(PRESETS.custom)}>Custom Styling</button>
-            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+              <div className="presets">
+                <button 
+                  className={`preset-chip ${activePreset === 'success' ? 'active' : ''}`} 
+                  onClick={() => handleSetPreset('success')}
+                >
+                  Success Preset
+                </button>
+                <button 
+                  className={`preset-chip ${activePreset === 'error' ? 'active' : ''}`} 
+                  onClick={() => handleSetPreset('error')}
+                >
+                  Error Preset
+                </button>
+                <button 
+                  className={`preset-chip ${activePreset === 'custom' ? 'active' : ''}`} 
+                  onClick={() => handleSetPreset('custom')}
+                >
+                  Custom Styling
+                </button>
+              </div>
 
             <div className="toggle-row">
               <label className="toggle-label" htmlFor="glassy-toggle">Glassy Look</label>
