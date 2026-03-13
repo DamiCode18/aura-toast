@@ -117,7 +117,7 @@ auraToast.success('Works in Vanilla JS too!');
 #### Configuration Object
 | Property | Type | Description |
 | --- | --- | --- |
-| `duration` | `number` | Time in ms before auto-dismiss (default: 4000). Set to 0 to disable. |
+| `duration` | `number` | Time in ms before auto-dismiss (default: 4000). Set to `0` for **sticky** toasts (remains until replaced or manual dismiss). |
 | `action` | `{ label: string, onClick: () => void }` | Optional action button. |
 
 ## Customization

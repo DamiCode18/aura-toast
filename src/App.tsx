@@ -48,14 +48,21 @@ const App: React.FC = () => {
   const [isGlassy, setIsGlassy] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [position, setPosition] = useState<any>('top-right');
+  const [duration, setDuration] = useState(4000);
 
   const handleSetPreset = (key: keyof typeof PRESETS) => {
     let newCode = PRESETS[key];
-    // Sync position in new preset code
+    // Sync position and duration in new preset code
     newCode = newCode.replace(/position: '[^']+'/, `position: '${position}'`);
+    newCode = newCode.replace(/duration: \d+/, `duration: ${duration}`);
+    
     if (!newCode.includes('position:')) {
       newCode = newCode.replace(/glassy: [^,}]+/, `$&,\n  position: '${position}'`);
     }
+    if (!newCode.includes('duration:')) {
+      newCode = newCode.replace(/position: [^,}]+/, `$&,\n  duration: ${duration}`);
+    }
+    
     setCode(newCode);
     setActivePreset(key);
   };
@@ -84,6 +91,18 @@ const App: React.FC = () => {
     });
   };
 
+  // Sync code with duration change
+  const handleDurationChange = (dur: number) => {
+    setDuration(dur);
+    setCode(prev => {
+      if (prev.includes('duration:')) {
+        return prev.replace(/duration: \d+/, `duration: ${dur}`);
+      } else {
+        return prev.replace(/position: [^,}]+/, `$&,\n  duration: ${dur}`);
+      }
+    });
+  };
+
   const runCode = () => {
     try {
       // Create a safe-ish execution environment
@@ -93,7 +112,8 @@ const App: React.FC = () => {
       auraToast.error(`Execution Error: ${err instanceof Error ? err.message : String(err)}`, { 
         description: 'Check your syntax and try again.',
         glassy: isGlassy,
-        position: position
+        position: position,
+        duration: duration
       });
     }
   };
@@ -101,22 +121,26 @@ const App: React.FC = () => {
   const triggerSuccess = () => auraToast.success('Changes saved successfully!', { 
     description: 'Your updates have been applied.',
     glassy: isGlassy,
-    position: position
+    position: position,
+    duration: duration
   });
   const triggerError = () => auraToast.error('An error occurred', { 
     description: 'We could not complete your request at this time.',
     glassy: isGlassy,
-    position: position
+    position: position,
+    duration: duration
   });
   const triggerInfo = () => auraToast.info('New Update', { 
     description: 'AuraToast v1.1.0 is now available.',
     glassy: isGlassy,
-    position: position
+    position: position,
+    duration: duration
   });
   const triggerWarning = () => auraToast.warning('Critical Warning', { 
     description: 'Your session is about to expire in 5 minutes.',
     glassy: isGlassy,
-    position: position
+    position: position,
+    duration: duration
   });
 
   const triggerPromise = () => {
@@ -125,7 +149,7 @@ const App: React.FC = () => {
       loading: 'Processing request...',
       success: 'Request completed!',
       error: 'Request failed.'
-    }, { glassy: isGlassy, position: position });
+    }, { glassy: isGlassy, position: position, duration: duration });
   };
 
   return (
@@ -239,6 +263,24 @@ const App: React.FC = () => {
                 <option value="bottom-center">Bottom Center</option>
                 <option value="bottom-right">Bottom Right</option>
               </select>
+            </div>
+
+            <div className="toggle-row">
+              <label className="toggle-label">Duration</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="10000" 
+                  step="500"
+                  value={duration} 
+                  onChange={(e) => handleDurationChange(parseInt(e.target.value))}
+                  style={{ cursor: 'pointer', width: '100px' }}
+                />
+                <span style={{ fontSize: '0.875rem', width: '3.5rem', opacity: 0.8 }}>
+                  {duration === 0 ? 'Sticky' : `${(duration / 1000).toFixed(1)}s`}
+                </span>
+              </div>
             </div>
           </div>
           </div>
