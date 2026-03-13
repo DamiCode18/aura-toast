@@ -9,6 +9,7 @@ declare class ToastStore {
     getState(): ToastState;
     subscribe(listener: Listener): () => void;
     private notify;
+    private isDuplicate;
     show(config: ToastConfig): void;
     private startTimer;
     pause(): void;
