@@ -13,11 +13,12 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc-alias",
+    "build": "vite build --mode library && tsc-alias",
+    "build:demo": "vite build",
     "test": "vitest run",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "npm run build:demo",
+    "deploy": "gh-pages -d dist-demo"
   },
   "keywords": [
     "react-toast",
