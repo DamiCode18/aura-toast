@@ -71,6 +71,31 @@ function MyComponent() {
 }
 ```
 
+## Vanilla JS & Other Frameworks
+
+AuraToast is built with a **Framework-Agnostic Core**. While we provide React components for convenience, you can easily use it with any framework (Vue, Svelte, Angular) or Vanilla JS by subscribing to the `toastStore`.
+
+### Usage in Vanilla JS
+
+```javascript
+import { auraToast, toastStore } from 'aura-toast';
+import 'aura-toast/dist/style.css';
+
+// 1. Subscribe to the store to handle rendering
+toastStore.subscribe((config) => {
+  if (config) {
+    // Render your own toast UI or use the provided CSS classes
+    console.log('Show toast:', config.message);
+  } else {
+    // Hide toast
+    console.log('Hide toast');
+  }
+});
+
+// 2. Trigger toasts as usual
+auraToast.success('Works in Vanilla JS too!');
+```
+
 ## API
 
 ### `auraToast.success(message, config?)`
