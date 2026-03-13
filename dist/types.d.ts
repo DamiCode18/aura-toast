@@ -1,4 +1,5 @@
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
+export type ToastType = 'success' | 'error' | 'info' | 'warning' | 'loading';
+export type ToastPosition = 'top-right' | 'top-left' | 'bottom-left' | 'bottom-right' | 'top-center' | 'bottom-center';
 export interface ToastConfig {
     message: string;
     type?: ToastType;
@@ -12,6 +13,8 @@ export interface ToastConfig {
     style?: React.CSSProperties;
     className?: string;
     glassy?: boolean;
+    position?: ToastPosition;
+    loading?: boolean;
 }
 export type ToastState = ToastConfig | null;
 export type Listener = (state: ToastState) => void;

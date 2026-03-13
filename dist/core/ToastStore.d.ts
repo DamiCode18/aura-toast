@@ -22,6 +22,11 @@ export declare const auraToast: {
     error: (message: string, config?: Omit<ToastConfig, "message" | "type">) => void;
     info: (message: string, config?: Omit<ToastConfig, "message" | "type">) => void;
     warning: (message: string, config?: Omit<ToastConfig, "message" | "type">) => void;
+    promise: <T>(promise: Promise<T>, msgs: {
+        loading: string;
+        success: string;
+        error: string;
+    }, config?: Omit<ToastConfig, "message" | "type">) => Promise<T>;
     dismiss: () => void;
     pause: () => void;
     resume: () => void;
