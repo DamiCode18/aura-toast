@@ -16,17 +16,59 @@
   --aura-glow-error: rgba(239, 68, 68, 0.5);
   --aura-glow-info: rgba(59, 130, 246, 0.5);
   --aura-glow-warning: rgba(245, 158, 11, 0.5);
+  
+  --aura-loading: #94a3b8;
+  --aura-glow-loading: rgba(148, 163, 184, 0.5);
 }
 
 .aura-container {
   position: fixed;
-  top: 2rem;
-  right: 2rem;
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   pointer-events: none;
+  padding: 2rem;
+}
+
+.aura-container.top-right {
+  top: 0;
+  right: 0;
+  align-items: flex-end;
+}
+
+.aura-container.top-left {
+  top: 0;
+  left: 0;
+  align-items: flex-start;
+}
+
+.aura-container.bottom-right {
+  bottom: 0;
+  right: 0;
+  align-items: flex-end;
+  flex-direction: column-reverse;
+}
+
+.aura-container.bottom-left {
+  bottom: 0;
+  left: 0;
+  align-items: flex-start;
+  flex-direction: column-reverse;
+}
+
+.aura-container.top-center {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+}
+
+.aura-container.bottom-center {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  flex-direction: column-reverse;
 }
 
 .aura-toast {
@@ -38,13 +80,12 @@
   background: rgba(17, 25, 40, 0.88);
   backdrop-filter: blur(20px) saturate(210%);
   -webkit-backdrop-filter: blur(20px) saturate(210%);
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--type-border);
   box-shadow: 
-    0 15px 40px 0 rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1),
-    0 0 20px rgba(0, 0, 0, 0.15);
+    0 10px 30px 0 rgba(0, 0, 0, 0.4),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.1),
+    0 0 0 1px var(--type-border),
+    0 0 15px -5px var(--type-glow-sharp);
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -88,24 +129,70 @@
   --type-glow: var(--aura-glow-success);
   --type-glow-soft: rgba(16, 185, 129, 0.15);
   --type-glow-inner: rgba(16, 185, 129, 0.3);
+  --type-border: rgba(16, 185, 129, 0.4);
+  --type-glow-sharp: rgba(16, 185, 129, 0.6);
 }
 .aura-toast.error { 
   --type-color: var(--aura-error); 
   --type-glow: var(--aura-glow-error);
   --type-glow-soft: rgba(239, 68, 68, 0.15);
   --type-glow-inner: rgba(239, 68, 68, 0.3);
+  --type-border: rgba(239, 68, 68, 0.4);
+  --type-glow-sharp: rgba(239, 68, 68, 0.6);
 }
 .aura-toast.info { 
   --type-color: var(--aura-info); 
   --type-glow: var(--aura-glow-info);
   --type-glow-soft: rgba(59, 130, 246, 0.15);
   --type-glow-inner: rgba(59, 130, 246, 0.3);
+  --type-border: rgba(59, 130, 246, 0.4);
+  --type-glow-sharp: rgba(59, 130, 246, 0.6);
 }
 .aura-toast.warning { 
   --type-color: var(--aura-warning); 
   --type-glow: var(--aura-glow-warning);
   --type-glow-soft: rgba(245, 158, 11, 0.15);
   --type-glow-inner: rgba(245, 158, 11, 0.3);
+  --type-border: rgba(245, 158, 11, 0.4);
+  --type-glow-sharp: rgba(245, 158, 11, 0.6);
+}
+.aura-toast.loading {
+  --type-color: var(--aura-loading);
+  --type-glow: var(--aura-glow-loading);
+  --type-glow-soft: rgba(148, 163, 184, 0.1);
+  --type-glow-inner: rgba(148, 163, 184, 0.2);
+  --type-border: rgba(148, 163, 184, 0.3);
+  --type-glow-sharp: rgba(148, 163, 184, 0.4);
+}
+
+/* Light Mode Refinements - Sharper and more vibrant */
+.light-mode .aura-toast {
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.06),
+    0 0 0 1px var(--type-border),
+    0 0 15px -3px var(--type-glow-sharp);
+  border-color: var(--type-border);
+}
+
+.light-mode .aura-toast.success { 
+  --type-border: rgba(16, 185, 129, 0.6);
+  --type-glow-sharp: rgba(16, 185, 129, 0.8);
+}
+.light-mode .aura-toast.error { 
+  --type-border: rgba(239, 68, 68, 0.6);
+  --type-glow-sharp: rgba(239, 68, 68, 0.8);
+}
+.light-mode .aura-toast.info { 
+  --type-border: rgba(59, 130, 246, 0.6);
+  --type-glow-sharp: rgba(59, 130, 246, 0.8);
+}
+.light-mode .aura-toast.warning { 
+  --type-border: rgba(245, 158, 11, 0.6);
+  --type-glow-sharp: rgba(245, 158, 11, 0.8);
+}
+.light-mode .aura-toast.loading {
+  --type-border: rgba(100, 116, 139, 0.4);
+  --type-glow-sharp: rgba(100, 116, 139, 0.5);
 }
 
 .aura-icon {
@@ -181,33 +268,49 @@
   transform: scale(1.1);
 }
 
-/* Animations */
-@keyframes aura-slide-in {
-  from {
-    transform: translateX(100%) scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-  }
+/* Base Slide Animations */
+@keyframes aura-slide-in-right {
+  from { transform: translateX(100%) scale(0.9); opacity: 0; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes aura-slide-in-left {
+  from { transform: translateX(-100%) scale(0.9); opacity: 0; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes aura-slide-in-top {
+  from { transform: translateY(-100%) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes aura-slide-in-bottom {
+  from { transform: translateY(100%) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 @keyframes aura-fade-out {
-  from {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(20%) scale(0.95);
-    opacity: 0;
-  }
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(0.95); opacity: 0; }
 }
 
-.aura-toast-enter {
-  animation: aura-slide-in 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
-}
+/* Position-aware entrance animations */
+.top-right .aura-toast-enter { animation: aura-slide-in-right 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.bottom-right .aura-toast-enter { animation: aura-slide-in-right 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.top-left .aura-toast-enter { animation: aura-slide-in-left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.bottom-left .aura-toast-enter { animation: aura-slide-in-left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.top-center .aura-toast-enter { animation: aura-slide-in-top 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.bottom-center .aura-toast-enter { animation: aura-slide-in-bottom 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
 
 .aura-toast-exit {
   animation: aura-fade-out 0.3s ease-in forwards;
+}
+
+@keyframes aura-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.aura-spinner {
+  animation: aura-spin 1s linear infinite;
 }

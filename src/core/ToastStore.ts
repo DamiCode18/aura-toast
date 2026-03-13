@@ -111,6 +111,19 @@ export const auraToast = {
     toastStore.show({ ...config, message, type: 'info' }),
   warning: (message: string, config?: Omit<ToastConfig, 'message' | 'type'>) => 
     toastStore.show({ ...config, message, type: 'warning' }),
+  promise: <T>(promise: Promise<T>, msgs: { loading: string; success: string; error: string }, config?: Omit<ToastConfig, 'message' | 'type'>) => {
+    toastStore.show({ ...config, message: msgs.loading, type: 'loading', duration: 0 });
+    
+    promise
+      .then(() => {
+        toastStore.show({ ...config, message: msgs.success, type: 'success' });
+      })
+      .catch(() => {
+        toastStore.show({ ...config, message: msgs.error, type: 'error' });
+      });
+      
+    return promise;
+  },
   dismiss: () => toastStore.dismiss(),
   pause: () => toastStore.pause(),
   resume: () => toastStore.resume(),

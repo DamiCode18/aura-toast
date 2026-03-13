@@ -29,6 +29,10 @@
     "alert",
     "notification",
     "ui-library",
+    "premium-ui",
+    "toast",
+    "notification",
+    "ui-library",
     "premium-ui"
   ],
   "author": "DamiCode",

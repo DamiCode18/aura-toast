@@ -28,7 +28,17 @@ In a world of cluttered notification stacks, **AuraToast** takes a "less is more
 ## Installation
 
 ```bash
+# npm
 npm install aura-toast
+
+# yarn
+yarn add aura-toast
+
+# pnpm
+pnpm add aura-toast
+
+# bun
+bun add aura-toast
 ```
 
 ## Quick Start (React)
