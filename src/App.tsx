@@ -28,6 +28,7 @@ const PRESETS = {
 const App: React.FC = () => {
   const [code, setCode] = useState(PRESETS.success);
   const [isGlassy, setIsGlassy] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   // Sync code with glassy toggle
   const handleToggleGlassy = (enabled: boolean) => {
@@ -58,8 +59,22 @@ const App: React.FC = () => {
 
   return (
     <AuraProvider>
-      <div className="demo-page">
+      <div className={`demo-page ${!isDarkMode ? 'light-mode' : ''}`}>
         <header>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '-2rem' }}>
+            <div className="toggle-row" style={{ margin: 0 }}>
+              <label className="toggle-label" htmlFor="theme-toggle">{isDarkMode ? '🌙 Dark' : '☀️ Light'}</label>
+              <label className="switch">
+                <input 
+                  type="checkbox" 
+                  id="theme-toggle"
+                  checked={!isDarkMode} 
+                  onChange={(e) => setIsDarkMode(!e.target.checked)} 
+                />
+                <span className="slider"></span>
+              </label>
+            </div>
+          </div>
           <h1>AuraToast</h1>
           <p>Premium Glassmorphism Toast Manager</p>
         </header>

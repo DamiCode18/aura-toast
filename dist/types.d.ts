@@ -10,6 +10,7 @@ export interface ToastConfig {
     };
     style?: React.CSSProperties;
     className?: string;
+    glassy?: boolean;
 }
 export type ToastState = ToastConfig | null;
 export type Listener = (state: ToastState) => void;
