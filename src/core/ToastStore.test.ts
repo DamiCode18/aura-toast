@@ -59,4 +59,25 @@ describe('ToastStore', () => {
     toastStore.dismiss();
     expect(toastStore.getState()).toBeNull();
   });
+
+  it('should not notify listeners and should reset timeout when showing a duplicate toast', () => {
+    const listener = vi.fn();
+    const config = { message: 'Duplicate', duration: 1000 };
+    
+    toastStore.show(config);
+    toastStore.subscribe(listener);
+
+    // Show same toast again
+    toastStore.show(config);
+
+    expect(listener).not.toHaveBeenCalled();
+    
+    // Advance time - should still be visible because timer was reset
+    vi.advanceTimersByTime(500);
+    expect(toastStore.getState()).not.toBeNull();
+
+    // Advance time further - should be dismissed now
+    vi.advanceTimersByTime(500);
+    expect(toastStore.getState()).toBeNull();
+  });
 });

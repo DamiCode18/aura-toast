@@ -20,7 +20,28 @@ class ToastStore {
     this.listeners.forEach((listener) => listener(this.state));
   }
 
+  private isDuplicate(config: ToastConfig): boolean {
+    if (!this.state) return false;
+    
+    return (
+      this.state.message === config.message &&
+      (this.state.type || 'info') === (config.type || 'info') &&
+      this.state.description === config.description &&
+      this.state.glassy === config.glassy
+    );
+  }
+
   show(config: ToastConfig) {
+    if (this.isDuplicate(config)) {
+      const duration = config.duration ?? 4000;
+      if (duration > 0) {
+        this.startTime = Date.now();
+        this.remainingDuration = duration;
+        this.startTimer(duration);
+      }
+      return;
+    }
+
     this.dismiss();
 
     const id = config.id || Math.random().toString(36).substring(2, 9);
