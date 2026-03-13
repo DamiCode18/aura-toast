@@ -162,7 +162,7 @@ const App: React.FC = () => {
               spellCheck={false}
             />
             <div className="playground-actions">
-              <button className="playground-btn reset-btn" onClick={() => setCode(PRESETS.success)}>Reset</button>
+              <button className="playground-btn reset-btn" onClick={() => handleSetPreset('success')}>Reset</button>
               <button className="playground-btn run-btn" onClick={runCode}>Run Snippet</button>
             </div>
           </div>

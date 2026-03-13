@@ -53,6 +53,8 @@ export const AuraToast: React.FC<{ config: ToastConfig }> = ({ config }) => {
   return (
     <div 
       className={`aura-toast ${config.type || 'info'} ${config.glassy !== false ? 'aura-toast-glassy' : ''} ${isExiting ? 'aura-toast-exit' : 'aura-toast-enter'} ${config.className || ''}`}
+      onMouseEnter={() => auraToast.pause()}
+      onMouseLeave={() => auraToast.resume()}
       style={{
         ...config.style,
         ...((config.style as any)?.['--type-color'] ? { '--type-color': (config.style as any)['--type-color'] } : {}),
