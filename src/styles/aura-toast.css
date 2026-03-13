@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --aura-bg: rgba(17, 25, 40, 0.75);
+  --aura-border: rgba(255, 255, 255, 0.125);
+  --aura-text: #ffffff;
+  --aura-text-muted: rgba(255, 255, 255, 0.6);
+  --aura-font: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  --aura-success: #10b981;
+  --aura-error: #ef4444;
+  --aura-info: #3b82f6;
+  --aura-warning: #f59e0b;
+  
+  --aura-glow-success: rgba(16, 185, 129, 0.5);
+  --aura-glow-error: rgba(239, 68, 68, 0.5);
+  --aura-glow-info: rgba(59, 130, 246, 0.5);
+  --aura-glow-warning: rgba(245, 158, 11, 0.5);
+}
+
+.aura-container {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.aura-toast {
+  pointer-events: auto;
+  min-width: 320px;
+  max-width: 440px;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  background: var(--aura-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--aura-border);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  font-family: var(--aura-font);
+  color: var(--aura-text);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.aura-toast::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--type-color);
+  box-shadow: 0 0 15px var(--type-glow);
+}
+
+.aura-toast.success { --type-color: var(--aura-success); --type-glow: var(--aura-glow-success); }
+.aura-toast.error { --type-color: var(--aura-error); --type-glow: var(--aura-glow-error); }
+.aura-toast.info { --type-color: var(--aura-info); --type-glow: var(--aura-glow-info); }
+.aura-toast.warning { --type-color: var(--aura-warning); --type-glow: var(--aura-glow-warning); }
+
+.aura-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.aura-content {
+  flex-grow: 1;
+}
+
+.aura-message {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.aura-action {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--type-color);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s;
+}
+
+.aura-action:hover {
+  opacity: 0.8;
+}
+
+.aura-close {
+  background: none;
+  border: none;
+  color: var(--aura-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: -4px;
+  margin-top: -2px;
+  transition: color 0.2s;
+}
+
+.aura-close:hover {
+  color: var(--aura-text);
+}
+
+/* Animations */
+@keyframes aura-slide-in {
+  from {
+    transform: translateX(100%) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes aura-fade-out {
+  from {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(20%) scale(0.95);
+    opacity: 0;
+  }
+}
+
+.aura-toast-enter {
+  animation: aura-slide-in 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+.aura-toast-exit {
+  animation: aura-fade-out 0.3s ease-in forwards;
+}
