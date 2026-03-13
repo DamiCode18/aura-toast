@@ -18,19 +18,24 @@ npm install aura-toast
 
 ## Quick Start (React)
 
-1. Wrap your application with `AuraProvider`:
+1. Import the styles in your main entry file (e.g., `main.tsx` or `App.tsx`):
+
+```tsx
+import 'aura-toast/dist/style.css';
+```
+
+2. Wrap your application with `AuraProvider`:
 
 ```tsx
 import { AuraProvider } from 'aura-toast';
-
-function App() {
-  return (
-    <AuraProvider>
-      <YourAppContents />
-    </AuraProvider>
-  );
-}
 ```
+
+## Live Demo
+
+Check out the interactive showcase: [Live Demo Link (GitHub Pages/Vercel)]
+
+> [!TIP]
+> **Single Toast Policy**: AuraToast is designed for focus. Each new toast replaces the previous one with a smooth transition, preventing UI clutter.
 
 2. Trigger toasts using the `auraToast` object:
 

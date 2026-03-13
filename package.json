@@ -9,9 +9,11 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc-alias",
+    "test": "vitest run",
     "preview": "vite preview"
   },
   "keywords": [
@@ -32,16 +34,21 @@
   },
   "homepage": "https://github.com/damicode18/aura-toast#readme",
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "@vitest/ui": "^4.1.0",
+    "jsdom": "^28.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsc-alias": "^1.8.0",
     "typescript": "^5.0.0",
     "vite": "^4.4.0",
-    "vite-plugin-dts": "^3.0.0"
+    "vite-plugin-dts": "^3.0.0",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "react": "^18.2.0",
