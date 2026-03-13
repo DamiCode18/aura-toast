@@ -11,6 +11,7 @@ export interface ToastConfig {
   };
   style?: React.CSSProperties;
   className?: string;
+  glassy?: boolean;
 }
 
 export type ToastState = ToastConfig | null;

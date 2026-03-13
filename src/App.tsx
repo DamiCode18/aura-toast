@@ -4,14 +4,18 @@ import './styles/demo.css';
 
 const PRESETS = {
   success: `auraToast.success('Changes saved successfully!', {
+  glassy: true,
   action: {
     label: 'Undo',
     onClick: () => console.log('Undo clicked'),
   }
 });`,
-  error: `auraToast.error('An unexpected error occurred while processing your request.');`,
+  error: `auraToast.error('An unexpected error occurred while processing your request.', {
+  glassy: true
+});`,
   custom: `auraToast.info('This is a completely custom styled toast!', {
   duration: 0,
+  glassy: true,
   style: {
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -23,6 +27,19 @@ const PRESETS = {
 
 const App: React.FC = () => {
   const [code, setCode] = useState(PRESETS.success);
+  const [isGlassy, setIsGlassy] = useState(true);
+
+  // Sync code with glassy toggle
+  const handleToggleGlassy = (enabled: boolean) => {
+    setIsGlassy(enabled);
+    setCode(prev => {
+      if (enabled) {
+        return prev.replace(/glassy: false/g, 'glassy: true');
+      } else {
+        return prev.replace(/glassy: true/g, 'glassy: false');
+      }
+    });
+  };
 
   const runCode = () => {
     try {
@@ -34,10 +51,10 @@ const App: React.FC = () => {
     }
   };
 
-  const triggerSuccess = () => auraToast.success('Project "QuantumLeap" changes were saved successfully!');
-  const triggerError = () => auraToast.error('An unexpected error occurred.');
-  const triggerInfo = () => auraToast.info('A new version is available.');
-  const triggerWarning = () => auraToast.warning('Your subscription is expiring soon.');
+  const triggerSuccess = () => auraToast.success('Project "QuantumLeap" changes were saved successfully!', { glassy: isGlassy });
+  const triggerError = () => auraToast.error('An unexpected error occurred.', { glassy: isGlassy });
+  const triggerInfo = () => auraToast.info('A new version is available.', { glassy: isGlassy });
+  const triggerWarning = () => auraToast.warning('Your subscription is expiring soon.', { glassy: isGlassy });
 
   return (
     <AuraProvider>
@@ -58,10 +75,25 @@ const App: React.FC = () => {
           <h2>Live Playground</h2>
           <p>Test the code directly here. Feel free to modify the snippets below!</p>
           
-          <div className="presets">
-            <button className="preset-chip" onClick={() => setCode(PRESETS.success)}>Success Preset</button>
-            <button className="preset-chip" onClick={() => setCode(PRESETS.error)}>Error Preset</button>
-            <button className="preset-chip" onClick={() => setCode(PRESETS.custom)}>Custom Styling</button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+            <div className="presets">
+              <button className="preset-chip" onClick={() => setCode(PRESETS.success)}>Success Preset</button>
+              <button className="preset-chip" onClick={() => setCode(PRESETS.error)}>Error Preset</button>
+              <button className="preset-chip" onClick={() => setCode(PRESETS.custom)}>Custom Styling</button>
+            </div>
+
+            <div className="toggle-row">
+              <label className="toggle-label" htmlFor="glassy-toggle">Glassy Look</label>
+              <label className="switch">
+                <input 
+                  type="checkbox" 
+                  id="glassy-toggle"
+                  checked={isGlassy} 
+                  onChange={(e) => handleToggleGlassy(e.target.checked)} 
+                />
+                <span className="slider"></span>
+              </label>
+            </div>
           </div>
 
           <div className="editor-container">

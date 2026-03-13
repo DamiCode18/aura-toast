@@ -33,23 +33,32 @@
   pointer-events: auto;
   min-width: 320px;
   max-width: 440px;
-  padding: 1rem 1.25rem;
-  border-radius: 16px;
-  background: var(--aura-bg);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid var(--aura-border);
+  padding: 1.25rem 1.5rem;
+  border-radius: 20px;
+  background: rgba(17, 25, 40, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.37),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 12px 40px 0 rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   display: flex;
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: flex-start;
   font-family: var(--aura-font);
   color: var(--aura-text);
   overflow: hidden;
   position: relative;
   transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.aura-toast-glassy {
+  backdrop-filter: blur(24px) saturate(210%);
+  -webkit-backdrop-filter: blur(24px) saturate(210%);
+  background: rgba(17, 25, 40, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 15px 45px 0 rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 20px rgba(255, 255, 255, 0.03);
 }
 
 .aura-toast::before {
