@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     dts({
       insertTypesEntry: true,
-      exclude: ['src/App.tsx', 'src/main.tsx', 'src/styles/demo.css'],
+      exclude: ['src/App.tsx', 'src/main.tsx', 'src/styles/demo.css', 'src/core/ToastStore.test.ts'],
     }),
   ],
   build: {

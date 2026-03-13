@@ -1,7 +1,7 @@
 {
   "name": "aura-toast",
   "version": "0.1.0",
-  "description": "Premium glassmorphism toast manager with single-toast constraint",
+  "description": "Premium React toast notifications with glassmorphism design. Lightweight, customizable, and enforces a single-toast constraint for clean UI.",
   "main": "dist/aura-toast.cjs.js",
   "module": "dist/aura-toast.es.js",
   "style": "dist/style.css",
@@ -17,11 +17,15 @@
     "preview": "vite preview"
   },
   "keywords": [
-    "toast",
-    "notification",
+    "react-toast",
+    "toast-notification",
+    "react-component",
     "glassmorphism",
-    "premium",
-    "ui"
+    "snackbar",
+    "alert",
+    "notification",
+    "ui-library",
+    "premium-ui"
   ],
   "author": "DamiCode",
   "license": "MIT",

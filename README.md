@@ -1,6 +1,6 @@
-# AuraToast
+# AuraToast: Premium React Toast & Notification Manager
 
-A premium npm package for a toast manager with a unique glassmorphism design and a strict "single-toast-at-a-time" constraint.
+A high-performance npm package for React toast notifications with a stunning glassmorphism design and a strict "single-toast-at-a-time" constraint.
 
 ## Features
 
@@ -9,6 +9,14 @@ A premium npm package for a toast manager with a unique glassmorphism design and
 - 🛠️ **Framework Agnostic Core**: Core logic is written in TypeScript and can be used with any framework.
 - ⚛️ **React Ready**: Comes with first-class React support (`AuraProvider`, `useAuraToast`).
 - 🎨 **Highly Customizable**: Uses CSS variables for easy theme adjustments.
+
+## Why AuraToast?
+
+In a world of cluttered notification stacks, **AuraToast** takes a "less is more" approach. It's built for developers who want:
+- **Focus**: The single-toast constraint ensures users are never overwhelmed.
+- **Aesthetics**: Premium glassmorphism UI that fits modern, high-end applications.
+- **Lightweight**: Zero-dependency core with first-class React support.
+- **Performance**: Optimized for speed and smooth transitions.
 
 ## Installation
 
