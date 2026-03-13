@@ -77,7 +77,8 @@ const App: React.FC = () => {
 
   return (
     <AuraProvider>
-      <div className={`demo-page ${!isDarkMode ? 'light-mode' : ''}`}>
+      <div className={`theme-container ${!isDarkMode ? 'light-mode' : ''}`}>
+        <div className="demo-page">
         <header>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '-2rem' }}>
             <div className="toggle-row" style={{ margin: 0 }}>
@@ -156,6 +157,7 @@ const App: React.FC = () => {
             <p>Ultra-modern design with backdrop-blur, subtle borders, and soft shadows.</p>
           </div>
         </section>
+        </div>
       </div>
     </AuraProvider>
   );
