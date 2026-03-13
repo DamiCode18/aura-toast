@@ -3,6 +3,7 @@ export type ToastType = 'success' | 'error' | 'info' | 'warning';
 export interface ToastConfig {
   message: string;
   type?: ToastType;
+  description?: string;
   duration?: number; // 0 for infinite (manual close)
   id?: string;
   action?: {

@@ -4,16 +4,19 @@ import './styles/demo.css';
 
 const PRESETS = {
   success: `auraToast.success('Changes saved successfully!', {
+  description: 'Your updates have been applied to the production server.',
   glassy: true,
   action: {
     label: 'Undo',
     onClick: () => console.log('Undo clicked'),
   }
 });`,
-  error: `auraToast.error('An unexpected error occurred while processing your request.', {
+  error: `auraToast.error('Upload failed', {
+  description: 'The server responded with a 500 status code. Please try again later.',
   glassy: true
 });`,
-  custom: `auraToast.info('This is a completely custom styled toast!', {
+  custom: `auraToast.info('System Update', {
+  description: 'A new version of AuraToast is now available for download.',
   duration: 0,
   glassy: true,
   style: {
@@ -48,14 +51,29 @@ const App: React.FC = () => {
       const execute = new Function('auraToast', code);
       execute(auraToast);
     } catch (err) {
-      auraToast.error(`Execution Error: ${err instanceof Error ? err.message : String(err)}`);
+      auraToast.error(`Execution Error: ${err instanceof Error ? err.message : String(err)}`, { 
+        description: 'Check your syntax and try again.',
+        glassy: isGlassy 
+      });
     }
   };
 
-  const triggerSuccess = () => auraToast.success('Project "QuantumLeap" changes were saved successfully!', { glassy: isGlassy });
-  const triggerError = () => auraToast.error('An unexpected error occurred.', { glassy: isGlassy });
-  const triggerInfo = () => auraToast.info('A new version is available.', { glassy: isGlassy });
-  const triggerWarning = () => auraToast.warning('Your subscription is expiring soon.', { glassy: isGlassy });
+  const triggerSuccess = () => auraToast.success('Changes saved successfully!', { 
+    description: 'Your updates have been applied.',
+    glassy: isGlassy 
+  });
+  const triggerError = () => auraToast.error('An error occurred', { 
+    description: 'We could not complete your request at this time.',
+    glassy: isGlassy 
+  });
+  const triggerInfo = () => auraToast.info('New Update', { 
+    description: 'AuraToast v1.1.0 is now available.',
+    glassy: isGlassy 
+  });
+  const triggerWarning = () => auraToast.warning('Critical Warning', { 
+    description: 'Your session is about to expire in 5 minutes.',
+    glassy: isGlassy 
+  });
 
   return (
     <AuraProvider>

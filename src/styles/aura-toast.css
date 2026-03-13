@@ -31,18 +31,22 @@
 
 .aura-toast {
   pointer-events: auto;
-  min-width: 320px;
-  max-width: 440px;
-  padding: 1.25rem 1.5rem;
-  border-radius: 20px;
-  background: rgba(17, 25, 40, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 360px;
+  max-width: 480px;
+  padding: 1.25rem;
+  border-radius: 24px;
+  background: rgba(17, 25, 40, 0.4);
+  backdrop-filter: blur(24px) saturate(210%);
+  -webkit-backdrop-filter: blur(24px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 
-    0 12px 40px 0 rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    0 15px 45px 0 rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 20px rgba(0, 0, 0, 0.1);
   display: flex;
   gap: 1.25rem;
-  align-items: flex-start;
+  align-items: center;
   font-family: var(--aura-font);
   color: var(--aura-text);
   overflow: hidden;
@@ -50,70 +54,112 @@
   transition: all 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
-.aura-toast-glassy {
-  backdrop-filter: blur(24px) saturate(210%);
-  -webkit-backdrop-filter: blur(24px) saturate(210%);
-  background: rgba(17, 25, 40, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 
-    0 15px 45px 0 rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 0 20px rgba(255, 255, 255, 0.03);
-}
 
+/* Sub-layer for the left glow strip - removed in favor of circular aura */
 .aura-toast::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--type-color);
-  box-shadow: 0 0 15px var(--type-glow);
+  display: none;
 }
 
-.aura-toast.success { --type-color: var(--aura-success); --type-glow: var(--aura-glow-success); }
-.aura-toast.error { --type-color: var(--aura-error); --type-glow: var(--aura-glow-error); }
-.aura-toast.info { --type-color: var(--aura-info); --type-glow: var(--aura-glow-info); }
-.aura-toast.warning { --type-color: var(--aura-warning); --type-glow: var(--aura-glow-warning); }
-
-.aura-icon {
+.aura-icon-container {
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2px;
+  background: var(--type-glow-soft);
+  position: relative;
+  box-shadow: inset 0 0 12px var(--type-glow-inner);
+}
+
+.aura-icon-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--type-glow);
+  opacity: 0.3;
+}
+
+.aura-toast.success { 
+  --type-color: var(--aura-success); 
+  --type-glow: var(--aura-glow-success);
+  --type-glow-soft: rgba(16, 185, 129, 0.15);
+  --type-glow-inner: rgba(16, 185, 129, 0.3);
+}
+.aura-toast.error { 
+  --type-color: var(--aura-error); 
+  --type-glow: var(--aura-glow-error);
+  --type-glow-soft: rgba(239, 68, 68, 0.15);
+  --type-glow-inner: rgba(239, 68, 68, 0.3);
+}
+.aura-toast.info { 
+  --type-color: var(--aura-info); 
+  --type-glow: var(--aura-glow-info);
+  --type-glow-soft: rgba(59, 130, 246, 0.15);
+  --type-glow-inner: rgba(59, 130, 246, 0.3);
+}
+.aura-toast.warning { 
+  --type-color: var(--aura-warning); 
+  --type-glow: var(--aura-glow-warning);
+  --type-glow-soft: rgba(245, 158, 11, 0.15);
+  --type-glow-inner: rgba(245, 158, 11, 0.3);
+}
+
+.aura-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--type-color);
+  filter: drop-shadow(0 0 8px var(--type-glow));
 }
 
 .aura-content {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .aura-message {
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+  color: #ffffff;
+}
+
+.aura-description {
+  font-size: 0.875rem;
+  font-weight: 400;
   line-height: 1.5;
   margin: 0;
+  color: var(--aura-text-muted);
+}
+
+.aura-action-container {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
 }
 
 .aura-action {
-  margin-top: 0.75rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--type-color);
-  background: none;
-  border: none;
-  padding: 0;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .aura-action:hover {
-  opacity: 0.8;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
 .aura-close {
@@ -125,13 +171,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: -4px;
-  margin-top: -2px;
-  transition: color 0.2s;
+  margin-left: 0.5rem;
+  transition: color 0.2s, transform 0.2s;
 }
 
 .aura-close:hover {
   color: var(--aura-text);
+  transform: scale(1.1);
 }
 
 /* Animations */
