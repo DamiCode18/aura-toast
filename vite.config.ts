@@ -4,6 +4,7 @@ import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 
 export default defineConfig({
+  base: '/aura-toast/',
   plugins: [
     react(),
     dts({

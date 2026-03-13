@@ -1,6 +1,13 @@
 # AuraToast: Premium React Toast & Notification Manager
 
+![AuraToast Preview](./aura-toast-preview.png)
+
 A high-performance npm package for React toast notifications with a stunning glassmorphism design and a strict "single-toast-at-a-time" constraint.
+
+## Live Demo & Playground
+
+- **Interactive Playground**: [Try it on StackBlitz](https://stackblitz.com/github/damicode18/aura-toast)
+- **Live Showcase**: [damicode18.github.io/aura-toast](https://damicode18.github.io/aura-toast/)
 
 ## Features
 

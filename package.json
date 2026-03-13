@@ -1,6 +1,7 @@
 {
   "name": "aura-toast",
   "version": "0.2.0",
+  "homepage": "https://damicode18.github.io/aura-toast/",
   "description": "Premium React toast notifications with glassmorphism design. Lightweight, customizable, and enforces a single-toast constraint for clean UI.",
   "main": "dist/aura-toast.cjs.js",
   "module": "dist/aura-toast.es.js",
@@ -14,7 +15,9 @@
     "dev": "vite",
     "build": "vite build && tsc-alias",
     "test": "vitest run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [
     "react-toast",
@@ -36,7 +39,6 @@
   "bugs": {
     "url": "https://github.com/damicode18/aura-toast/issues"
   },
-  "homepage": "https://github.com/damicode18/aura-toast#readme",
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -45,6 +47,7 @@
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",
     "@vitest/ui": "^4.1.0",
+    "gh-pages": "^6.3.0",
     "jsdom": "^28.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
