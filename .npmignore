@@ -1,0 +1,27 @@
+# Source
+src/
+index.html
+
+# Configs
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+
+# Documentation (optional, but usually README is enough)
+# README.md is generally included by default
+
+# Testing
+*.test.*
+__tests__/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Other
+.DS_Store
+node_modules/
+.git/
+.gitignore
+.npmrc
