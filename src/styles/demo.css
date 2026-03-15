@@ -132,18 +132,60 @@ header h1 {
 
 .editor-header {
   padding: 0.75rem 1rem;
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--card-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.mac-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.mac-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.mac-dot.close { background: #ff5f56; }
+.mac-dot.minimize { background: #ffbd2e; }
+.mac-dot.expand { background: #27c93f; }
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
 .editor-title {
   font-size: 0.8rem;
   color: #64748b;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 .code-textarea {
@@ -308,4 +350,39 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(24px);
   background-color: white;
+}
+
+
+@media screen and (max-width: 768px) {
+  .demo-page {
+    padding: 2rem 1rem;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .playground-section {
+    padding: 2rem 1rem;
+  }
+
+  .code-textarea {
+    height: 150px;
+  }
+
+  .playground-actions {
+    flex-direction: column;
+  }
+
+  .playground-btn {
+    width: 100%;
+  }
 }

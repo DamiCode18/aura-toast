@@ -28,7 +28,23 @@
   flex-direction: column;
   pointer-events: none;
   padding: 2rem;
+  gap: 1rem; /* For non-stacked if multiples were allowed */
 }
+
+/* Stacking Container */
+.aura-container[data-stack="true"] {
+  display: grid;
+  gap: 0;
+}
+
+/* Grid Alignments for Stacked Mode */
+.aura-container[data-stack="true"].top-right { place-items: start end; }
+.aura-container[data-stack="true"].top-left { place-items: start start; }
+.aura-container[data-stack="true"].bottom-right { place-items: end end; }
+.aura-container[data-stack="true"].bottom-left { place-items: end start; }
+.aura-container[data-stack="true"].top-center { place-items: start center; }
+.aura-container[data-stack="true"].bottom-center { place-items: end center; }
+
 
 .aura-container.top-right {
   top: 0;
@@ -73,8 +89,7 @@
 
 .aura-toast {
   pointer-events: auto;
-  min-width: 300px;
-  max-width: 420px;
+  width: 350px;
   padding: 1rem;
   border-radius: 20px;
   background: rgba(17, 25, 40, 0.88);
@@ -209,8 +224,8 @@
   gap: 0.25rem;
 }
 
-.aura-message {
-  font-size: 0.9375rem;
+.aura-title {
+  font-size: var(--toast-font-size-title, 0.875rem);
   font-weight: 600;
   line-height: 1.4;
   margin: 0;
@@ -218,7 +233,7 @@
 }
 
 .aura-description {
-  font-size: 0.8125rem;
+  font-size: var(--toast-font-size-desc, 0.75rem);
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
@@ -294,17 +309,19 @@
   to { transform: scale(0.95); opacity: 0; }
 }
 
-/* Position-aware entrance animations */
-.top-right .aura-toast-enter { animation: aura-slide-in-right 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
-.bottom-right .aura-toast-enter { animation: aura-slide-in-right 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
-.top-left .aura-toast-enter { animation: aura-slide-in-left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
-.bottom-left .aura-toast-enter { animation: aura-slide-in-left 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
-.top-center .aura-toast-enter { animation: aura-slide-in-top 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
-.bottom-center .aura-toast-enter { animation: aura-slide-in-bottom 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+/* Position-aware entrance animations for normal flow */
+.top-right .aura-toast-enter { animation: aura-slide-in-right 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.bottom-right .aura-toast-enter { animation: aura-slide-in-right 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.top-left .aura-toast-enter { animation: aura-slide-in-left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.bottom-left .aura-toast-enter { animation: aura-slide-in-left 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.top-center .aura-toast-enter { animation: aura-slide-in-top 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+.bottom-center .aura-toast-enter { animation: aura-slide-in-bottom 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
 
 .aura-toast-exit {
   animation: aura-fade-out 0.3s ease-in forwards;
 }
+
+
 
 @keyframes aura-spin {
   from { transform: rotate(0deg); }

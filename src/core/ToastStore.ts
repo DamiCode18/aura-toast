@@ -1,11 +1,14 @@
 import { ToastConfig, ToastState, Listener } from '../types';
 
+const MAX_TOASTS = 5;
+
 class ToastStore {
-  private state: ToastState = null;
+  private state: ToastState = [];
   private listeners: Set<Listener> = new Set();
-  private timeoutId: NodeJS.Timeout | null = null;
-  private startTime: number | null = null;
-  private remainingDuration: number | null = null;
+  
+  private timeouts: Map<string, NodeJS.Timeout> = new Map();
+  private startTimes: Map<string, number> = new Map();
+  private remainingDurations: Map<string, number> = new Map();
 
   getState(): ToastState {
     return this.state;
@@ -21,81 +24,122 @@ class ToastStore {
   }
 
   private isDuplicate(config: ToastConfig): boolean {
-    if (!this.state) return false;
-    
-    return (
-      this.state.message === config.message &&
-      (this.state.type || 'info') === (config.type || 'info') &&
-      this.state.description === config.description &&
-      this.state.glassy === config.glassy
+    return this.state.some(toast => 
+      toast.title === config.title &&
+      (toast.type || 'info') === (config.type || 'info') &&
+      toast.description === config.description &&
+      toast.glassy === config.glassy
     );
   }
 
   show(config: ToastConfig) {
     if (this.isDuplicate(config)) {
-      const duration = config.duration ?? 4000;
-      if (duration > 0) {
-        this.startTime = Date.now();
-        this.remainingDuration = duration;
-        this.startTimer(duration);
+      // Find the duplicate and restart its timer
+      const duplicate = this.state.find(toast => 
+        toast.title === config.title &&
+        (toast.type || 'info') === (config.type || 'info') &&
+        toast.description === config.description &&
+        toast.glassy === config.glassy
+      );
+      if (duplicate && duplicate.id) {
+        const duration = config.duration ?? 4000;
+        if (duration > 0) {
+          this.startTimes.set(duplicate.id, Date.now());
+          this.remainingDurations.set(duplicate.id, duration);
+          this.startTimer(duplicate.id, duration);
+        }
       }
       return;
     }
 
-    this.dismiss();
-
     const id = config.id || Math.random().toString(36).substring(2, 9);
     const duration = config.duration ?? 4000;
     
-    this.state = { 
+    const newToast = { 
       ...config, 
       id,
       type: config.type || 'info',
       duration 
     };
+
+    this.state = [newToast, ...this.state];
+
+    if (this.state.length > MAX_TOASTS) {
+      const oldestToast = this.state[this.state.length - 1];
+      if (oldestToast && oldestToast.id) {
+        this.clearTimerData(oldestToast.id);
+      }
+      this.state = this.state.slice(0, MAX_TOASTS);
+    }
     
     this.notify();
 
     if (duration > 0) {
-      this.startTime = Date.now();
-      this.remainingDuration = duration;
-      this.startTimer(duration);
+      this.startTimes.set(id, Date.now());
+      this.remainingDurations.set(id, duration);
+      this.startTimer(id, duration);
     }
   }
 
-  private startTimer(duration: number) {
-    if (this.timeoutId) clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => {
-      this.dismiss();
+  private startTimer(id: string, duration: number) {
+    if (this.timeouts.has(id)) {
+      clearTimeout(this.timeouts.get(id));
+    }
+    const timeoutId = setTimeout(() => {
+      this.dismiss(id);
     }, duration);
+    this.timeouts.set(id, timeoutId);
+  }
+
+  private clearTimerData(id: string) {
+    if (this.timeouts.has(id)) {
+      clearTimeout(this.timeouts.get(id));
+      this.timeouts.delete(id);
+    }
+    this.startTimes.delete(id);
+    this.remainingDurations.delete(id);
   }
 
   pause() {
-    if (!this.state || !this.timeoutId || !this.startTime) return;
-    
-    clearTimeout(this.timeoutId);
-    this.timeoutId = null;
-    
-    const elapsed = Date.now() - this.startTime;
-    this.remainingDuration = Math.max(0, (this.remainingDuration || 0) - elapsed);
-    this.startTime = null;
+    this.state.forEach(toast => {
+      const id = toast.id!;
+      if (this.timeouts.has(id) && this.startTimes.has(id)) {
+        clearTimeout(this.timeouts.get(id));
+        this.timeouts.delete(id);
+        
+        const startTime = this.startTimes.get(id)!;
+        const elapsed = Date.now() - startTime;
+        const currentRemaining = this.remainingDurations.get(id) || 0;
+        
+        this.remainingDurations.set(id, Math.max(0, currentRemaining - elapsed));
+        this.startTimes.delete(id);
+      }
+    });
   }
 
   resume() {
-    if (!this.state || this.timeoutId || this.remainingDuration === null || this.remainingDuration <= 0) return;
-    
-    this.startTime = Date.now();
-    this.startTimer(this.remainingDuration);
+    this.state.forEach(toast => {
+      const id = toast.id!;
+      const remaining = this.remainingDurations.get(id);
+      
+      if (!this.timeouts.has(id) && remaining !== undefined && remaining > 0) {
+        this.startTimes.set(id, Date.now());
+        this.startTimer(id, remaining);
+      }
+    });
   }
 
-  dismiss() {
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-      this.timeoutId = null;
+  dismiss(id?: string) {
+    if (id) {
+      this.clearTimerData(id);
+      this.state = this.state.filter(toast => toast.id !== id);
+    } else {
+      this.timeouts.forEach(timeoutId => clearTimeout(timeoutId));
+      this.timeouts.clear();
+      this.startTimes.clear();
+      this.remainingDurations.clear();
+      this.state = [];
     }
-    this.state = null;
-    this.startTime = null;
-    this.remainingDuration = null;
     this.notify();
   }
 }
@@ -103,28 +147,51 @@ class ToastStore {
 export const toastStore = new ToastStore();
 
 export const auraToast = {
-  success: (message: string, config?: Omit<ToastConfig, 'message' | 'type'>) => 
-    toastStore.show({ ...config, message, type: 'success' }),
-  error: (message: string, config?: Omit<ToastConfig, 'message' | 'type'>) => 
-    toastStore.show({ ...config, message, type: 'error' }),
-  info: (message: string, config?: Omit<ToastConfig, 'message' | 'type'>) => 
-    toastStore.show({ ...config, message, type: 'info' }),
-  warning: (message: string, config?: Omit<ToastConfig, 'message' | 'type'>) => 
-    toastStore.show({ ...config, message, type: 'warning' }),
-  promise: <T>(promise: Promise<T>, msgs: { loading: string; success: string; error: string }, config?: Omit<ToastConfig, 'message' | 'type'>) => {
-    toastStore.show({ ...config, message: msgs.loading, type: 'loading', duration: 0 });
+  success: (content: string | Omit<ToastConfig, 'type'>, config?: Omit<ToastConfig, 'title' | 'type'>) => {
+    const finalConfig = typeof content === 'string' ? { ...config, title: content } : { ...config, ...content };
+    return toastStore.show({ ...finalConfig, type: 'success' });
+  },
+  error: (content: string | Omit<ToastConfig, 'type'>, config?: Omit<ToastConfig, 'title' | 'type'>) => {
+    const finalConfig = typeof content === 'string' ? { ...config, title: content } : { ...config, ...content };
+    return toastStore.show({ ...finalConfig, type: 'error' });
+  },
+  info: (content: string | Omit<ToastConfig, 'type'>, config?: Omit<ToastConfig, 'title' | 'type'>) => {
+    const finalConfig = typeof content === 'string' ? { ...config, title: content } : { ...config, ...content };
+    return toastStore.show({ ...finalConfig, type: 'info' });
+  },
+  warning: (content: string | Omit<ToastConfig, 'type'>, config?: Omit<ToastConfig, 'title' | 'type'>) => {
+    const finalConfig = typeof content === 'string' ? { ...config, title: content } : { ...config, ...content };
+    return toastStore.show({ ...finalConfig, type: 'warning' });
+  },
+  promise: <T>(
+    promise: Promise<T>, 
+    msgs: { 
+      loading: string | Omit<ToastConfig, 'type'>; 
+      success: string | Omit<ToastConfig, 'type'>; 
+      error: string | Omit<ToastConfig, 'type'> 
+    }, 
+    config?: Omit<ToastConfig, 'title' | 'type'>
+  ) => {
+    const id = config?.id || Math.random().toString(36).substring(2, 9);
+    
+    const loadingConfig = typeof msgs.loading === 'string' ? { ...config, title: msgs.loading } : { ...config, ...msgs.loading };
+    toastStore.show({ ...loadingConfig, id, type: 'loading', duration: 0 });
     
     promise
       .then(() => {
-        toastStore.show({ ...config, message: msgs.success, type: 'success' });
+        toastStore.dismiss(id);
+        const successConfig = typeof msgs.success === 'string' ? { ...config, title: msgs.success } : { ...config, ...msgs.success };
+        toastStore.show({ ...successConfig, id, type: 'success' });
       })
       .catch(() => {
-        toastStore.show({ ...config, message: msgs.error, type: 'error' });
+        toastStore.dismiss(id);
+        const errorConfig = typeof msgs.error === 'string' ? { ...config, title: msgs.error } : { ...config, ...msgs.error };
+        toastStore.show({ ...errorConfig, id, type: 'error' });
       });
       
     return promise;
   },
-  dismiss: () => toastStore.dismiss(),
+  dismiss: (id?: string) => toastStore.dismiss(id),
   pause: () => toastStore.pause(),
   resume: () => toastStore.resume(),
 };

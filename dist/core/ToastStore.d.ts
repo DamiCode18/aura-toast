@@ -3,31 +3,32 @@ import { ToastConfig, ToastState, Listener } from '../types';
 declare class ToastStore {
     private state;
     private listeners;
-    private timeoutId;
-    private startTime;
-    private remainingDuration;
+    private timeouts;
+    private startTimes;
+    private remainingDurations;
     getState(): ToastState;
     subscribe(listener: Listener): () => void;
     private notify;
     private isDuplicate;
     show(config: ToastConfig): void;
     private startTimer;
+    private clearTimerData;
     pause(): void;
     resume(): void;
-    dismiss(): void;
+    dismiss(id?: string): void;
 }
 export declare const toastStore: ToastStore;
 export declare const auraToast: {
-    success: (message: string, config?: Omit<ToastConfig, "message" | "type">) => void;
-    error: (message: string, config?: Omit<ToastConfig, "message" | "type">) => void;
-    info: (message: string, config?: Omit<ToastConfig, "message" | "type">) => void;
-    warning: (message: string, config?: Omit<ToastConfig, "message" | "type">) => void;
+    success: (content: string | Omit<ToastConfig, "type">, config?: Omit<ToastConfig, "title" | "type">) => void;
+    error: (content: string | Omit<ToastConfig, "type">, config?: Omit<ToastConfig, "title" | "type">) => void;
+    info: (content: string | Omit<ToastConfig, "type">, config?: Omit<ToastConfig, "title" | "type">) => void;
+    warning: (content: string | Omit<ToastConfig, "type">, config?: Omit<ToastConfig, "title" | "type">) => void;
     promise: <T>(promise: Promise<T>, msgs: {
-        loading: string;
-        success: string;
-        error: string;
-    }, config?: Omit<ToastConfig, "message" | "type">) => Promise<T>;
-    dismiss: () => void;
+        loading: string | Omit<ToastConfig, "type">;
+        success: string | Omit<ToastConfig, "type">;
+        error: string | Omit<ToastConfig, "type">;
+    }, config?: Omit<ToastConfig, "title" | "type">) => Promise<T>;
+    dismiss: (id?: string) => void;
     pause: () => void;
     resume: () => void;
 };

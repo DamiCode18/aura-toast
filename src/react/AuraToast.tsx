@@ -39,13 +39,33 @@ const LoadingIcon = () => (
   </svg>
 );
 
-export const AuraToast: React.FC<{ config: ToastConfig }> = ({ config }) => {
+export const AuraToast: React.FC<{ 
+  config: ToastConfig, 
+  index?: number, 
+  isStacked?: boolean, 
+  totalToasts?: number,
+  onHeight?: (h: number) => void
+}> = ({ config, index = 0, isStacked = false, totalToasts = 1, onHeight }) => {
   const [isExiting, setIsExiting] = useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current && onHeight) {
+      onHeight(ref.current.getBoundingClientRect().height);
+    }
+    const handleResize = () => {
+      if (ref.current && onHeight) {
+        onHeight(ref.current.getBoundingClientRect().height);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [config.title, config.description, onHeight]);
 
   const handleDismiss = () => {
     setIsExiting(true);
     setTimeout(() => {
-      toastStore.dismiss();
+      toastStore.dismiss(config.id);
     }, 300); // Match CSS fade-out animation
   };
 
@@ -59,6 +79,7 @@ export const AuraToast: React.FC<{ config: ToastConfig }> = ({ config }) => {
 
   return (
     <div 
+      ref={ref}
       className={`aura-toast ${config.type || 'info'} ${config.glassy !== false ? 'aura-toast-glassy' : ''} ${isExiting ? 'aura-toast-exit' : 'aura-toast-enter'} ${config.className || ''}`}
       onMouseEnter={() => auraToast.pause()}
       onMouseLeave={() => auraToast.resume()}
@@ -66,6 +87,8 @@ export const AuraToast: React.FC<{ config: ToastConfig }> = ({ config }) => {
         ...config.style,
         ...((config.style as any)?.['--type-color'] ? { '--type-color': (config.style as any)['--type-color'] } : {}),
         ...((config.style as any)?.['--type-glow'] ? { '--type-glow': (config.style as any)['--type-glow'] } : {}),
+        ...((config.style as any)?.['--toast-font-size-title'] ? { '--toast-font-size-title': (config.style as any)['--toast-font-size-title'] } : {}),
+        ...((config.style as any)?.['--toast-font-size-desc'] ? { '--toast-font-size-desc': (config.style as any)['--toast-font-size-desc'] } : {}),
       } as React.CSSProperties}
     >
       <div className="aura-icon-container">
@@ -74,7 +97,7 @@ export const AuraToast: React.FC<{ config: ToastConfig }> = ({ config }) => {
         </div>
       </div>
       <div className="aura-content">
-        <p className="aura-message">{config.message}</p>
+        {config.title && <p className="aura-title">{config.title}</p>}
         {config.description && <p className="aura-description">{config.description}</p>}
       </div>
       {config.action && (

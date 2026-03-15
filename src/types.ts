@@ -1,10 +1,12 @@
+import React from 'react';
+
 export type ToastType = 'success' | 'error' | 'info' | 'warning' | 'loading';
 export type ToastPosition = 'top-right' | 'top-left' | 'bottom-left' | 'bottom-right' | 'top-center' | 'bottom-center';
 
 export interface ToastConfig {
-  message: string;
+  title?: React.ReactNode;
   type?: ToastType;
-  description?: string;
+  description?: React.ReactNode;
   duration?: number; // 0 for infinite (manual close)
   id?: string;
   action?: {
@@ -18,6 +20,6 @@ export interface ToastConfig {
   loading?: boolean;
 }
 
-export type ToastState = ToastConfig | null;
+export type ToastState = ToastConfig[];
 
 export type Listener = (state: ToastState) => void;

@@ -43,16 +43,20 @@ bun add aura-toast
 
 ## Quick Start (React)
 
-1. Import the styles in your main entry file (e.g., `main.tsx` or `App.tsx`):
-
-```tsx
-import 'aura-toast/dist/style.css';
-```
-
-2. Wrap your application with `AuraProvider`:
+1. Import the styles and the provider in your main entry file (e.g., `main.tsx` or `App.tsx`):
 
 ```tsx
 import { AuraProvider } from 'aura-toast';
+import 'aura-toast/dist/style.css';
+
+// Wrap your app. Optionally pass stack={true} to allow multiple layered toasts.
+function App() {
+  return (
+    <AuraProvider stack={true}>
+      <YourApp />
+    </AuraProvider>
+  );
+}
 ```
 
 ## Live Demo
@@ -60,7 +64,7 @@ import { AuraProvider } from 'aura-toast';
 Check out the interactive showcase: [Live Demo Link (GitHub Pages/Vercel)]
 
 > [!TIP]
-> **Single Toast Policy**: AuraToast is designed for focus. Each new toast replaces the previous one with a smooth transition, preventing UI clutter.
+> **Layout Modes**: AuraToast defaults to a single-toast focused mode. Each new toast elegantly replaces the previous one. If you prefer keeping history on screen, simply pass `stack={true}` to your `<AuraProvider>` to enable a beautiful layered card stack!
 
 2. Trigger toasts using the `auraToast` object:
 
@@ -69,11 +73,18 @@ import { auraToast } from 'aura-toast';
 
 function MyComponent() {
   const handleClick = () => {
+    // You can pass a string title and a config object:
     auraToast.success('Changes saved successfully!', {
+      description: 'Your database has been updated.',
       action: {
         label: 'Undo',
         onClick: () => console.log('Undo clicked'),
       }
+    });
+
+    // Or pass just a config object natively (Title is completely optional!)
+    auraToast.info({
+      description: 'System maintenance scheduled for 3AM.'
     });
   };
 
@@ -92,42 +103,48 @@ import { auraToast, toastStore } from 'aura-toast';
 import 'aura-toast/dist/style.css';
 
 // 1. Subscribe to the store to handle rendering
-toastStore.subscribe((config) => {
-  if (config) {
-    // Render your own toast UI or use the provided CSS classes
-    console.log('Show toast:', config.message);
+toastStore.subscribe((state) => {
+  // state is an array of ToastConfig objects
+  if (state.length > 0) {
+    console.log('Active toasts:', state);
   } else {
-    // Hide toast
-    console.log('Hide toast');
+    console.log('No active toasts');
   }
 });
 
 // 2. Trigger toasts as usual
-auraToast.success('Works in Vanilla JS too!');
+auraToast.success({ title: 'Works in Vanilla JS too!' });
 ```
 
 ## API
 
-### `auraToast.success(message, config?)`
-### `auraToast.error(message, config?)`
-### `auraToast.info(message, config?)`
-### `auraToast.warning(message, config?)`
-### `auraToast.dismiss()`
+### `auraToast.success(titleOrConfig, config?)`
+### `auraToast.error(titleOrConfig, config?)`
+### `auraToast.info(titleOrConfig, config?)`
+### `auraToast.warning(titleOrConfig, config?)`
+### `auraToast.promise(promise, { loading, success, error }, config?)`
+### `auraToast.dismiss(id?)`
 
 #### Configuration Object
 | Property | Type | Description |
 | --- | --- | --- |
-| `duration` | `number` | Time in ms before auto-dismiss (default: 4000). Set to `0` for **sticky** toasts (remains until replaced or manual dismiss). |
+| `title` | ` ReactNode` | The main title of the toast. |
+| `description` | `ReactNode` | Smaller subtitle text below the title. |
+| `duration` | `number` | Time in ms before auto-dismiss (default: 4000). Set to `0` for **sticky** toasts. |
+| `position` | `ToastPosition` | E.g. `'top-right'`, `'bottom-center'`. |
 | `action` | `{ label: string, onClick: () => void }` | Optional action button. |
+| `glassy` | `boolean` | Enable or disable premium backdrop-blur effects. |
 
 ## Customization
 
-You can override the default styles by providing values for these CSS variables:
+You can override the default styles and typography by providing values for these CSS variables natively in your app or within the `style` prop of a specific toast:
 
 ```css
 :root {
   --aura-bg: rgba(17, 25, 40, 0.75);
   --aura-success: #10b981;
+  --toast-font-size-title: 0.875rem;
+  --toast-font-size-desc: 0.75rem;
   /* ... see aura-toast.css for more */
 }
 ```

@@ -3,7 +3,8 @@ import { AuraProvider, auraToast } from './index';
 import './styles/demo.css';
 
 const PRESETS = {
-  success: `auraToast.success('Changes saved successfully!', {
+  success: `auraToast.success({
+  title: 'Changes saved successfully!',
   description: 'Your updates have been applied to the production server.',
   glassy: true,
   action: {
@@ -11,19 +12,22 @@ const PRESETS = {
     onClick: () => console.log('Undo clicked'),
   }
 });`,
-  error: `auraToast.error('Upload failed', {
+  error: `auraToast.error({
+  title: 'Upload failed',
   description: 'The server responded with a 500 status code. Please try again later.',
   glassy: true
 });`,
-  info: `auraToast.info('New Update', {
-  description: 'AuraToast v1.1.0 is now available with promise support.',
+  info: `auraToast.info({
+  description: 'AuraToast v1.1.0 is now available without a title.',
   glassy: true
 });`,
-  warning: `auraToast.warning('Critical Warning', {
+  warning: `auraToast.warning({
+  title: 'Critical Warning',
   description: 'Your session is about to expire in 5 minutes.',
   glassy: true
 });`,
-  custom: `auraToast.info('System Update', {
+  custom: `auraToast.info({
+  title: 'System Update',
   description: 'A new version of AuraToast is now available for download.',
   duration: 0,
   glassy: true,
@@ -32,13 +36,15 @@ const PRESETS = {
     border: '1px solid rgba(255, 255, 255, 0.3)',
     '--type-color': '#fff',
     '--type-glow': 'rgba(255, 255, 255, 0.5)',
+    '--toast-font-size-title': '1rem',
+    '--toast-font-size-desc': '0.875rem'
   }
 });`,
-  promise: `const myPromise = new Promise((resolve) => setTimeout(resolve, 2000));
+  promise: `const myPromise = new Promise((resolve, reject) => setTimeout(Math.random() > 0.5 ? resolve : reject, 2000));
 auraToast.promise(myPromise, {
-  loading: 'Updating profile...',
-  success: 'Profile updated successfully!',
-  error: 'Failed to update profile'
+  loading: { title: 'Updating profile...' },
+  success: { title: 'Profile updated successfully!' },
+  error: { title: 'Failed to update profile' }
 });`,
 };
 
@@ -49,6 +55,7 @@ const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [position, setPosition] = useState<any>('top-right');
   const [duration, setDuration] = useState(4000);
+  const [isStacked, setIsStacked] = useState(false);
 
   const handleSetPreset = (key: keyof typeof PRESETS) => {
     let newCode = PRESETS[key];
@@ -118,25 +125,29 @@ const App: React.FC = () => {
     }
   };
 
-  const triggerSuccess = () => auraToast.success('Changes saved successfully!', { 
+  const triggerSuccess = () => auraToast.success({ 
+    title: 'Changes saved successfully!',
     description: 'Your updates have been applied.',
     glassy: isGlassy,
     position: position,
     duration: duration
   });
-  const triggerError = () => auraToast.error('An error occurred', { 
+  const triggerError = () => auraToast.error({ 
+    title: 'An error occurred',
     description: 'We could not complete your request at this time.',
     glassy: isGlassy,
     position: position,
     duration: duration
   });
-  const triggerInfo = () => auraToast.info('New Update', { 
+  const triggerInfo = () => auraToast.info({ 
+    title: 'New Update',
     description: 'AuraToast v1.1.0 is now available.',
     glassy: isGlassy,
     position: position,
     duration: duration
   });
-  const triggerWarning = () => auraToast.warning('Critical Warning', { 
+  const triggerWarning = () => auraToast.warning({ 
+    title: 'Critical Warning',
     description: 'Your session is about to expire in 5 minutes.',
     glassy: isGlassy,
     position: position,
@@ -144,16 +155,16 @@ const App: React.FC = () => {
   });
 
   const triggerPromise = () => {
-    const promise = new Promise((resolve) => setTimeout(resolve, 3000));
+    const promise = new Promise((resolve, reject) => setTimeout(Math.random() > 0.5 ? resolve : reject, 3000));
     auraToast.promise(promise, {
-      loading: 'Processing request...',
-      success: 'Request completed!',
-      error: 'Request failed.'
+      loading: { title: 'Processing request...' },
+      success: { title: 'Request completed!' },
+      error: { title: 'Request failed.' }
     }, { glassy: isGlassy, position: position, duration: duration });
   };
 
   return (
-    <AuraProvider className={!isDarkMode ? 'light-mode' : ''}>
+    <AuraProvider className={!isDarkMode ? 'light-mode' : ''} stack={isStacked}>
       <div className={`theme-container ${!isDarkMode ? 'light-mode' : ''}`}>
         <div className="demo-page">
         <header>
@@ -242,6 +253,19 @@ const App: React.FC = () => {
             </div>
 
             <div className="toggle-row">
+              <label className="toggle-label" htmlFor="stack-toggle">Stack Toasts</label>
+              <label className="switch">
+                <input 
+                  type="checkbox" 
+                  id="stack-toggle"
+                  checked={isStacked} 
+                  onChange={(e) => setIsStacked(e.target.checked)} 
+                />
+                <span className="slider"></span>
+              </label>
+            </div>
+
+            <div className="toggle-row">
               <label className="toggle-label">Position</label>
               <select 
                 value={position} 
@@ -287,7 +311,27 @@ const App: React.FC = () => {
 
           <div className="editor-container">
             <div className="editor-header">
-              <span className="editor-title">Interactive Editor</span>
+              <div className="header-left">
+                <div className="mac-controls">
+                  <div className="mac-dot close"></div>
+                  <div className="mac-dot minimize"></div>
+                  <div className="mac-dot expand"></div>
+                </div>
+                <span className="editor-title">Interactive Editor</span>
+              </div>
+              <button 
+                className="copy-btn" 
+                onClick={() => {
+                  navigator.clipboard.writeText(code);
+                  auraToast.success('Copied to clipboard!', { position: 'bottom-center' });
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copy
+              </button>
             </div>
             <textarea 
               className="code-textarea" 
