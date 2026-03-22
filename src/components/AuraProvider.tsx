@@ -1,11 +1,16 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { ToastState } from '../types';
+import { ToastState, ToastTheme } from '../types';
 import { toastStore } from '../core/ToastStore';
 import { AuraToast } from './AuraToast';
 import '../styles/aura-toast.css';
 
-export const AuraProvider: React.FC<{ children: React.ReactNode, className?: string, stack?: boolean }> = ({ children, className, stack = false }) => {
+export const AuraProvider: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  stack?: boolean;
+  theme?: ToastTheme;
+}> = ({ children, className, stack = false, theme = 'dark' }) => {
   const [toasts, setToasts] = useState<ToastState>([]);
   const [heights, setHeights] = useState<Record<string, number>>({});
   const [isHovered, setIsHovered] = useState(false);
@@ -67,6 +72,7 @@ export const AuraProvider: React.FC<{ children: React.ReactNode, className?: str
             >
               <AuraToast 
                 config={toast}
+                defaultTheme={theme}
                 isStacked={stack}
                 onHeight={(h) => {
                   setHeights(prev => prev[toast.id!] === h ? prev : { ...prev, [toast.id!]: h });

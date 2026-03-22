@@ -50,9 +50,10 @@ import { AuraProvider } from 'aura-toast';
 import 'aura-toast/dist/style.css';
 
 // Wrap your app. Optionally pass stack={true} to allow multiple layered toasts.
+// You can also set a default built-in theme for all toasts.
 function App() {
   return (
-    <AuraProvider stack={true}>
+    <AuraProvider stack={true} theme="light">
       <YourApp />
     </AuraProvider>
   );
@@ -76,6 +77,7 @@ function MyComponent() {
     // You can pass a string title and a config object:
     auraToast.success('Changes saved successfully!', {
       description: 'Your database has been updated.',
+      theme: 'light',
       action: {
         label: 'Undo',
         onClick: () => console.log('Undo clicked'),
@@ -134,10 +136,11 @@ auraToast.success({ title: 'Works in Vanilla JS too!' });
 | `position` | `ToastPosition` | E.g. `'top-right'`, `'bottom-center'`. |
 | `action` | `{ label: string, onClick: () => void }` | Optional action button. |
 | `glassy` | `boolean` | Enable or disable premium backdrop-blur effects. |
+| `theme` | `'dark' \| 'light'` | Use AuraToast's built-in dark or light appearance. |
 
 ## Customization
 
-You can override the default styles and typography by providing values for these CSS variables natively in your app or within the `style` prop of a specific toast:
+AuraToast ships with built-in `dark` and `light` themes, and you can still override the default styles and typography by providing values for these CSS variables natively in your app or within the `style` prop of a specific toast:
 
 ```css
 :root {

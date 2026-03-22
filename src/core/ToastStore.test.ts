@@ -92,4 +92,14 @@ describe('ToastStore', () => {
     vi.advanceTimersByTime(500);
     expect(toastStore.getState().length).toBe(0);
   });
+
+  it('should treat different themes as distinct toasts', () => {
+    toastStore.show({ title: 'Theme test', type: 'info', theme: 'dark' });
+    toastStore.show({ title: 'Theme test', type: 'info', theme: 'light' });
+
+    const state = toastStore.getState();
+    expect(state.length).toBe(2);
+    expect(state[0].theme).toBe('light');
+    expect(state[1].theme).toBe('dark');
+  });
 });

@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { ToastConfig } from '../types';
+import { ToastConfig, ToastTheme } from '../types';
 import { toastStore, auraToast } from '../core/ToastStore';
 
 const SuccessIcon = () => (
@@ -42,13 +42,15 @@ const LoadingIcon = () => (
 
 export const AuraToast: React.FC<{ 
   config: ToastConfig, 
+  defaultTheme?: ToastTheme,
   index?: number, 
   isStacked?: boolean, 
   totalToasts?: number,
   onHeight?: (h: number) => void
-}> = ({ config, index = 0, isStacked = false, totalToasts = 1, onHeight }) => {
+}> = ({ config, defaultTheme = 'dark', index = 0, isStacked = false, totalToasts = 1, onHeight }) => {
   const [isExiting, setIsExiting] = useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
+  const theme = config.theme || defaultTheme;
 
   useEffect(() => {
     if (ref.current && onHeight) {
@@ -81,7 +83,8 @@ export const AuraToast: React.FC<{
   return (
     <div 
       ref={ref}
-      className={`aura-toast ${config.type || 'info'} ${config.glassy !== false ? 'aura-toast-glassy' : ''} ${isExiting ? 'aura-toast-exit' : 'aura-toast-enter'} ${config.className || ''}`}
+      className={`aura-toast ${config.type || 'info'} aura-toast-theme-${theme} ${config.glassy !== false ? 'aura-toast-glassy' : ''} ${isExiting ? 'aura-toast-exit' : 'aura-toast-enter'} ${config.className || ''}`}
+      data-theme={theme}
       onMouseEnter={() => auraToast.pause()}
       onMouseLeave={() => auraToast.resume()}
       style={{

@@ -2,6 +2,7 @@ import React from 'react';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning' | 'loading';
 export type ToastPosition = 'top-right' | 'top-left' | 'bottom-left' | 'bottom-right' | 'top-center' | 'bottom-center';
+export type ToastTheme = 'dark' | 'light';
 
 export interface ToastConfig {
   title?: React.ReactNode;
@@ -16,6 +17,7 @@ export interface ToastConfig {
   style?: React.CSSProperties;
   className?: string;
   glassy?: boolean;
+  theme?: ToastTheme;
   position?: ToastPosition;
   loading?: boolean;
 }

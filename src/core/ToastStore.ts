@@ -28,7 +28,8 @@ class ToastStore {
       toast.title === config.title &&
       (toast.type || 'info') === (config.type || 'info') &&
       toast.description === config.description &&
-      toast.glassy === config.glassy
+      toast.glassy === config.glassy &&
+      (toast.theme || 'dark') === (config.theme || 'dark')
     );
   }
 
@@ -39,7 +40,8 @@ class ToastStore {
         toast.title === config.title &&
         (toast.type || 'info') === (config.type || 'info') &&
         toast.description === config.description &&
-        toast.glassy === config.glassy
+        toast.glassy === config.glassy &&
+        (toast.theme || 'dark') === (config.theme || 'dark')
       );
       if (duplicate && duplicate.id) {
         const duration = config.duration ?? 4000;

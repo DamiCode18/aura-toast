@@ -1,6 +1,6 @@
 {
   "name": "aura-toast",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "homepage": "https://damicode18.github.io/aura-toast/",
   "description": "Premium React toast notifications with glassmorphism design. Lightweight, customizable, and enforces a single-toast constraint for clean UI.",
   "main": "dist/aura-toast.cjs.js",

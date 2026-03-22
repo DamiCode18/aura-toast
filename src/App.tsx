@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AuraProvider, auraToast } from './index';
+import { ToastTheme } from './types';
 import './styles/demo.css';
 
 const PRESETS = {
@@ -7,6 +8,7 @@ const PRESETS = {
   title: 'Changes saved successfully!',
   description: 'Your updates have been applied to the production server.',
   glassy: true,
+  theme: 'dark',
   action: {
     label: 'Undo',
     onClick: () => console.log('Undo clicked'),
@@ -15,22 +17,26 @@ const PRESETS = {
   error: `auraToast.error({
   title: 'Upload failed',
   description: 'The server responded with a 500 status code. Please try again later.',
-  glassy: true
+  glassy: true,
+  theme: 'dark'
 });`,
   info: `auraToast.info({
   description: 'AuraToast v1.1.0 is now available without a title.',
-  glassy: true
+  glassy: true,
+  theme: 'dark'
 });`,
   warning: `auraToast.warning({
   title: 'Critical Warning',
   description: 'Your session is about to expire in 5 minutes.',
-  glassy: true
+  glassy: true,
+  theme: 'dark'
 });`,
   custom: `auraToast.info({
   title: 'System Update',
   description: 'A new version of AuraToast is now available for download.',
   duration: 0,
   glassy: true,
+  theme: 'dark',
   style: {
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -45,7 +51,35 @@ auraToast.promise(myPromise, {
   loading: { title: 'Updating profile...' },
   success: { title: 'Profile updated successfully!' },
   error: { title: 'Failed to update profile' }
+}, {
+  theme: 'dark'
 });`,
+};
+
+const upsertToastConfigValue = (source: string, key: 'glassy' | 'position' | 'duration' | 'theme', value: string) => {
+  const pattern = new RegExp(`${key}:\\s*[^,\\n}]+`);
+  const nextEntry = `${key}: ${value}`;
+
+  if (pattern.test(source)) {
+    return source.replace(pattern, nextEntry);
+  }
+
+  const anchors = [
+    /glassy:\s*[^,\n}]+/,
+    /theme:\s*'[^']+'/,
+    /position:\s*'[^']+'/,
+    /duration:\s*\d+/,
+    /description:\s*[^,\n}]+/,
+    /title:\s*[^,\n}]+/,
+  ];
+
+  for (const anchor of anchors) {
+    if (anchor.test(source)) {
+      return source.replace(anchor, `$&,\n  ${nextEntry}`);
+    }
+  }
+
+  return source;
 };
 
 const App: React.FC = () => {
@@ -53,23 +87,16 @@ const App: React.FC = () => {
   const [activePreset, setActivePreset] = useState<keyof typeof PRESETS>('success');
   const [isGlassy, setIsGlassy] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [toastTheme, setToastTheme] = useState<ToastTheme>('dark');
   const [position, setPosition] = useState<any>('top-right');
   const [duration, setDuration] = useState(4000);
   const [isStacked, setIsStacked] = useState(false);
 
   const handleSetPreset = (key: keyof typeof PRESETS) => {
     let newCode = PRESETS[key];
-    // Sync position and duration in new preset code
-    newCode = newCode.replace(/position: '[^']+'/, `position: '${position}'`);
-    newCode = newCode.replace(/duration: \d+/, `duration: ${duration}`);
-    
-    if (!newCode.includes('position:')) {
-      newCode = newCode.replace(/glassy: [^,}]+/, `$&,\n  position: '${position}'`);
-    }
-    if (!newCode.includes('duration:')) {
-      newCode = newCode.replace(/position: [^,}]+/, `$&,\n  duration: ${duration}`);
-    }
-    
+    newCode = upsertToastConfigValue(newCode, 'theme', `'${toastTheme}'`);
+    newCode = upsertToastConfigValue(newCode, 'position', `'${position}'`);
+    newCode = upsertToastConfigValue(newCode, 'duration', `${duration}`);
     setCode(newCode);
     setActivePreset(key);
   };
@@ -77,37 +104,24 @@ const App: React.FC = () => {
   // Sync code with glassy toggle
   const handleToggleGlassy = (enabled: boolean) => {
     setIsGlassy(enabled);
-    setCode(prev => {
-      if (enabled) {
-        return prev.replace(/glassy: false/g, 'glassy: true');
-      } else {
-        return prev.replace(/glassy: true/g, 'glassy: false');
-      }
-    });
+    setCode(prev => upsertToastConfigValue(prev, 'glassy', `${enabled}`));
   };
 
   // Sync code with position change
   const handlePositionChange = (pos: string) => {
     setPosition(pos);
-    setCode(prev => {
-      if (prev.includes('position:')) {
-        return prev.replace(/position: '[^']+'/, `position: '${pos}'`);
-      } else {
-        return prev.replace(/glassy: [^,}]+/, `$&,\n  position: '${pos}'`);
-      }
-    });
+    setCode(prev => upsertToastConfigValue(prev, 'position', `'${pos}'`));
   };
 
   // Sync code with duration change
   const handleDurationChange = (dur: number) => {
     setDuration(dur);
-    setCode(prev => {
-      if (prev.includes('duration:')) {
-        return prev.replace(/duration: \d+/, `duration: ${dur}`);
-      } else {
-        return prev.replace(/position: [^,}]+/, `$&,\n  duration: ${dur}`);
-      }
-    });
+    setCode(prev => upsertToastConfigValue(prev, 'duration', `${dur}`));
+  };
+
+  const handleToastThemeChange = (theme: ToastTheme) => {
+    setToastTheme(theme);
+    setCode(prev => upsertToastConfigValue(prev, 'theme', `'${theme}'`));
   };
 
   const runCode = () => {
@@ -119,6 +133,7 @@ const App: React.FC = () => {
       auraToast.error(`Execution Error: ${err instanceof Error ? err.message : String(err)}`, { 
         description: 'Check your syntax and try again.',
         glassy: isGlassy,
+        theme: toastTheme,
         position: position,
         duration: duration
       });
@@ -129,6 +144,7 @@ const App: React.FC = () => {
     title: 'Changes saved successfully!',
     description: 'Your updates have been applied.',
     glassy: isGlassy,
+    theme: toastTheme,
     position: position,
     duration: duration
   });
@@ -136,6 +152,7 @@ const App: React.FC = () => {
     title: 'An error occurred',
     description: 'We could not complete your request at this time.',
     glassy: isGlassy,
+    theme: toastTheme,
     position: position,
     duration: duration
   });
@@ -143,6 +160,7 @@ const App: React.FC = () => {
     title: 'New Update',
     description: 'AuraToast v1.1.0 is now available.',
     glassy: isGlassy,
+    theme: toastTheme,
     position: position,
     duration: duration
   });
@@ -150,6 +168,7 @@ const App: React.FC = () => {
     title: 'Critical Warning',
     description: 'Your session is about to expire in 5 minutes.',
     glassy: isGlassy,
+    theme: toastTheme,
     position: position,
     duration: duration
   });
@@ -160,11 +179,11 @@ const App: React.FC = () => {
       loading: { title: 'Processing request...' },
       success: { title: 'Request completed!' },
       error: { title: 'Request failed.' }
-    }, { glassy: isGlassy, position: position, duration: duration });
+    }, { glassy: isGlassy, theme: toastTheme, position: position, duration: duration });
   };
 
   return (
-    <AuraProvider className={!isDarkMode ? 'light-mode' : ''} stack={isStacked}>
+    <AuraProvider stack={isStacked} theme={toastTheme}>
       <div className={`theme-container ${!isDarkMode ? 'light-mode' : ''}`}>
         <div className="demo-page">
         <header>
@@ -263,6 +282,26 @@ const App: React.FC = () => {
                 />
                 <span className="slider"></span>
               </label>
+            </div>
+
+            <div className="toggle-row">
+              <label className="toggle-label">Toast Theme</label>
+              <select 
+                value={toastTheme}
+                onChange={(e) => handleToastThemeChange(e.target.value as ToastTheme)}
+                style={{
+                  background: 'var(--editor-bg)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--card-border)',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
+                  outline: 'none',
+                  fontSize: '0.875rem'
+                }}
+              >
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+              </select>
             </div>
 
             <div className="toggle-row">
