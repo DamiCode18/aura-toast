@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import { ToastState } from '../types';
 import { toastStore } from '../core/ToastStore';

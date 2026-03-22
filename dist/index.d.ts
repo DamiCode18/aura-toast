@@ -1,4 +1,4 @@
 export * from './types';
 export * from './core/ToastStore';
-export * from './react/AuraProvider';
-export * from './react/AuraToast';
+export * from './components/AuraProvider';
+export * from './components/AuraToast';

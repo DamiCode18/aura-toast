@@ -1,7 +1,7 @@
 var mt = Object.defineProperty;
 var gt = (a, r, i) => r in a ? mt(a, r, { enumerable: !0, configurable: !0, writable: !0, value: i }) : a[r] = i;
 var F = (a, r, i) => (gt(a, typeof r != "symbol" ? r + "" : r, i), i);
-import de, { useState as G, useEffect as Ye } from "./react";
+import de, { useState as G, useEffect as Ye } from "react";
 const Fe = 5;
 class bt {
   constructor() {

@@ -1,4 +1,4 @@
-import { default as React } from './react';
+import { default as React } from 'react';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning' | 'loading';
 export type ToastPosition = 'top-right' | 'top-left' | 'bottom-left' | 'bottom-right' | 'top-center' | 'bottom-center';
