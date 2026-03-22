@@ -102,7 +102,8 @@
   --toast-close-color: rgba(255, 255, 255, 0.6);
   --toast-close-hover-color: #ffffff;
   pointer-events: auto;
-  width: 350px;
+  width: fit-content;
+  max-width: min(350px, calc(100vw - 4rem));
   padding: 0.875rem;
   border-radius: 20px;
   background: var(--toast-bg);
